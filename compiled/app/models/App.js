@@ -11,19 +11,40 @@
     }
 
     App.prototype.initialize = function() {
-      var deck;
+      var dealerHand, deck, playerHand;
       this.set('deck', deck = new Deck());
       this.set('playerHand', deck.dealPlayer());
       this.set('dealerHand', deck.dealDealer());
-      (this.get('playerHand')).on('bust', function() {
+      playerHand = this.get('playerHand');
+      dealerHand = this.get('dealerHand');
+      playerHand.on('bust', function() {
         return console.log('works');
       });
-      return (this.get('playerHand')).on('stand', (function(_this) {
+      playerHand.on('stand', (function(_this) {
         return function() {
           console.log('standing');
-          return (_this.get('dealerHand')).hit();
+          dealerHand.first().flip();
+          return dealerHand.dealerHit();
         };
       })(this));
+      return dealerHand.on('dealerFinished', (function(_this) {
+        return function() {
+          return _this.compareScores();
+        };
+      })(this));
+    };
+
+    App.prototype.compareScores = function() {
+      var dealerScore, playerScore;
+      playerScore = (this.get('playerHand')).scores()[0];
+      dealerScore = (this.get('dealerHand')).scores()[0];
+      if (playerScore > dealerScore) {
+        return this.trigger('won', 'won');
+      } else if (playerScore < dealerScore) {
+        return this.trigger('lost', 'lost');
+      } else {
+        return this.trigger('tie', 'tie');
+      }
     };
 
     return App;

@@ -22,12 +22,21 @@
     };
 
     AppView.prototype.initialize = function() {
+      this.model.on('won tie lost', (function(_this) {
+        return function(eventName) {
+          console.log(eventName);
+          return _this.render(eventName);
+        };
+      })(this));
       return this.render();
     };
 
-    AppView.prototype.render = function() {
+    AppView.prototype.render = function(arg) {
       this.$el.children().detach();
       this.$el.html(this.template());
+      if (arg) {
+        this.$el.prepend($('<h2></h2>').text(arg.toUpperCase()));
+      }
       this.$('.player-hand-container').html(new HandView({
         collection: this.model.get('playerHand')
       }).el);

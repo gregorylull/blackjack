@@ -25,18 +25,19 @@
       }
     };
 
-    Hand.prototype.hit = function() {
-      var _results;
+    Hand.prototype.dealerHit = function() {
       if (this.isDealer) {
-        _results = [];
-        while (!(this.scores() >= 17)) {
-          _results.push(this.hit());
+        while (!(this.scores()[0] >= 17)) {
+          this.add(this.deck.pop()).checkscores();
         }
-        return _results;
-      } else {
-        this.add(this.deck.pop()).checkscores();
-        return this.last();
       }
+      return this.trigger('dealerFinished');
+    };
+
+    Hand.prototype.hit = function() {
+      this.add(this.deck.pop()).checkscores();
+      console.log(this.scores()[0]);
+      return this.last();
     };
 
     Hand.prototype.stand = function() {

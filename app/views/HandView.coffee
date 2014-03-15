@@ -7,7 +7,7 @@ class window.HandView extends Backbone.View
 
   initialize: ->
     @collection.on 'add remove change', => @render()
-    @collection.on 'bust', => @render('bust')
+    @collection.on 'bust', => @render 'bust'
     @render()
 
   render: (arg) ->
@@ -18,4 +18,4 @@ class window.HandView extends Backbone.View
     @$('.score').text @collection.scores()[0]
     # my code
     # busted logic
-    if arg is 'bust' then $('h2', @$el).text 'you BUSTED!'
+    if arg is 'bust' then $('h2', @$el).text ((if @collection.isDealer then 'Dealer' else 'You') + ' BUSTED!') 

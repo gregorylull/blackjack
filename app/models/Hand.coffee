@@ -10,10 +10,13 @@ class window.Hand extends Backbone.Collection
       console.log 'trigger bust'
       @trigger('bust')
 
+  dealerHit: -> 
+    if @isDealer then @add(@deck.pop()).checkscores() until @scores()[0] >= 17
+    @trigger 'dealerFinished'
+
   hit: -> 
-    if @isDealer then @hit() until @scores() >= 17
-    else
       @add(@deck.pop()).checkscores()
+      console.log @scores()[0]
       @last()
 
   stand: -> @trigger 'stand'
