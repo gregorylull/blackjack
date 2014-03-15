@@ -18,12 +18,10 @@
       playerHand = this.get('playerHand');
       dealerHand = this.get('dealerHand');
       playerHand.on('bust', function() {
-        return console.log('works');
+        return console.log('player busted');
       });
       playerHand.on('stand', (function(_this) {
         return function() {
-          console.log('standing');
-          dealerHand.first().flip();
           return dealerHand.dealerHit();
         };
       })(this));

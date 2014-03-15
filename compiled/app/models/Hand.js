@@ -15,29 +15,33 @@
     Hand.prototype.initialize = function(array, deck, isDealer) {
       this.deck = deck;
       this.isDealer = isDealer;
+      return this.busted = false;
     };
 
     Hand.prototype.checkscores = function() {
-      console.log('check score');
-      if (this.scores()[0] > 21) {
-        console.log('trigger bust');
+      if (this.maxScore() > 21) {
+        this.busted = true;
         return this.trigger('bust');
       }
     };
 
     Hand.prototype.dealerHit = function() {
-      if (this.isDealer) {
-        while (!(this.scores()[0] >= 17)) {
-          this.add(this.deck.pop()).checkscores();
-        }
+      if (!this.busted) {
+        this.first().flip();
       }
-      return this.trigger('dealerFinished');
+      while (this.maxScore() < 17) {
+        this.hit();
+      }
+      if (!this.busted) {
+        return this.trigger('dealerFinished');
+      }
     };
 
     Hand.prototype.hit = function() {
-      this.add(this.deck.pop()).checkscores();
-      console.log(this.scores()[0]);
-      return this.last();
+      if (!this.busted) {
+        this.add(this.deck.pop()).checkscores();
+        return this.last();
+      }
     };
 
     Hand.prototype.stand = function() {
@@ -56,6 +60,14 @@
         return [score, score + 10];
       } else {
         return [score];
+      }
+    };
+
+    Hand.prototype.maxScore = function() {
+      if (this.scores()[1] <= 21) {
+        return this.scores()[1];
+      } else {
+        return this.scores()[0];
       }
     };
 

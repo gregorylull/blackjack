@@ -11,13 +11,10 @@ class window.App extends Backbone.Model
     dealerHand = @get 'dealerHand'
 
     # when player hits and busts
-    playerHand.on 'bust', -> console.log 'works'
+    playerHand.on 'bust', -> console.log 'player busted'
 
     # when player stands
-    playerHand.on 'stand', => 
-      console.log 'standing'
-      dealerHand.first().flip()
-      dealerHand.dealerHit()
+    playerHand.on 'stand', => dealerHand.dealerHit()
 
     # score comparison after play stands and after dealer is done dealing
     dealerHand.on 'dealerFinished', => @compareScores();

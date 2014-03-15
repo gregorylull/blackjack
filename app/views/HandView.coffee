@@ -15,7 +15,7 @@ class window.HandView extends Backbone.View
     @$el.html @template @collection
     @$el.append @collection.map (card) ->
       new CardView(model: card).$el
-    @$('.score').text @collection.scores()[0]
+    @$('.score').text @collection.maxScore()
     # my code
     # busted logic
     if arg is 'bust' then $('h2', @$el).text ((if @collection.isDealer then 'Dealer' else 'You') + ' BUSTED!') 

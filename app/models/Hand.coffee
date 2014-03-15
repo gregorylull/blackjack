@@ -3,20 +3,23 @@ class window.Hand extends Backbone.Collection
   model: Card
 
   initialize: (array, @deck, @isDealer) ->
+    @busted = false;
 
   checkscores: ->
-    console.log 'check score'
-    if @scores()[0] > 21 
-      console.log 'trigger bust'
-      @trigger('bust')
+    if @maxScore() > 21 
+      @busted = true;
+      @trigger 'bust'
 
   dealerHit: -> 
-    if @isDealer then @add(@deck.pop()).checkscores() until @scores()[0] >= 17
-    @trigger 'dealerFinished'
+    if not @busted then @first().flip()
+    while @maxScore() < 17
+      @hit()
+
+    if not @busted then @trigger 'dealerFinished'
 
   hit: -> 
+    if not @busted
       @add(@deck.pop()).checkscores()
-      console.log @scores()[0]
       @last()
 
   stand: -> @trigger 'stand'
@@ -32,3 +35,7 @@ class window.Hand extends Backbone.Collection
       score + if card.get 'revealed' then card.get 'value' else 0
     , 0
     if hasAce then [score, score + 10] else [score]
+
+  maxScore: ->
+    if @scores()[1] <= 21 then @scores()[1] else @scores()[0]
+

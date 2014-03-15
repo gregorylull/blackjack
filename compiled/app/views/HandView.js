@@ -36,7 +36,7 @@
           model: card
         }).$el;
       }));
-      this.$('.score').text(this.collection.scores()[0]);
+      this.$('.score').text(this.collection.maxScore());
       if (arg === 'bust') {
         return $('h2', this.$el).text((this.collection.isDealer ? 'Dealer' : 'You') + ' BUSTED!');
       }
