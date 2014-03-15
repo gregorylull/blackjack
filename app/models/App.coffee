@@ -5,3 +5,12 @@ class window.App extends Backbone.Model
     @set 'deck', deck = new Deck()
     @set 'playerHand', deck.dealPlayer()
     @set 'dealerHand', deck.dealDealer()
+
+    # when player hits and busts
+    (@get 'playerHand').on 'bust', -> console.log 'works'
+
+    # when player stands
+    (@get 'playerHand').on 'stand', => 
+      console.log 'standing'
+      (@get 'dealerHand').hit()
+
