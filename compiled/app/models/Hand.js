@@ -15,7 +15,8 @@
     Hand.prototype.initialize = function(array, deck, isDealer) {
       this.deck = deck;
       this.isDealer = isDealer;
-      return this.busted = false;
+      this.busted = false;
+      return this.playable = true;
     };
 
     Hand.prototype.checkscores = function() {
@@ -26,25 +27,27 @@
     };
 
     Hand.prototype.dealerHit = function() {
-      if (!this.busted) {
+      if (!this.busted && this.playable) {
         this.first().flip();
       }
       while (this.maxScore() < 17) {
         this.hit();
       }
       if (!this.busted) {
+        this.playable = false;
         return this.trigger('dealerFinished');
       }
     };
 
     Hand.prototype.hit = function() {
-      if (!this.busted) {
+      if (!this.busted && this.playable) {
         this.add(this.deck.pop()).checkscores();
         return this.last();
       }
     };
 
     Hand.prototype.stand = function() {
+      this.playable = false;
       return this.trigger('stand');
     };
 
